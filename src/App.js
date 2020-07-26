@@ -2,14 +2,16 @@ import React,{ Component } from 'react';
 import _ from 'lodash';
 import Loader from './Loader/Loader.js'
 import Table from './Table/Table.js'
+import RowData from './RowData/RowData.js'
 
 class App extends Component {
 
-	state={
+	state = {
 		dataLoading: true,
 		data: [],
 		sort: 'asc',
 		sortField: 'id',
+		row: null,
 	}
 
 	async componentDidMount() {
@@ -17,11 +19,11 @@ class App extends Component {
 		const data = await response.json();
 		this.setState({
 			dataLoading: false,
-			data
+			data: _.orderBy(data, this.state.sortField, this.state.sort)
 		})
 	}
 
-	doSort=(sortField)=>{
+	doSort = (sortField) => {
 		const cloneData=this.state.data.concat();
 		const sortType = this.state.sort === 'asc' ? 'desc' : 'asc';
 		const orderedData = _.orderBy(cloneData,sortField,sortType);
@@ -30,8 +32,12 @@ class App extends Component {
 			sort: sortType,
 			sortField
 		})
-		console.log(sortType);
 	}
+
+	onRowSelect = row => (
+    	this.setState({row})
+  	)
+
 
 	render() {
 	  return (
@@ -44,7 +50,13 @@ class App extends Component {
 	    				doSort={this.doSort} 
 	    				sort={this.state.sort}
         				sortField={this.state.sortField}
+        				onRowSelect={this.onRowSelect}
         				/>
+	    	}
+	    	{
+	    		this.state.row
+	    			? <RowData user={this.state.row}/>
+	    			: null
 	    	}
 	    </div>
 	  );
