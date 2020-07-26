@@ -4,6 +4,8 @@ import Loader from './Loader/Loader.js'
 import Table from './Table/Table.js'
 import RowData from './RowData/RowData.js'
 import DataSize from './DataSize/DataSize.js'
+import SearchForm from './SearchForm/SearchForm.js'
+import ReactPaginate from 'react-paginate';
 
 class App extends Component {
 
@@ -14,11 +16,13 @@ class App extends Component {
 		sort: 'asc',
 		sortField: 'id',
 		row: null,
+		currentPage: 0,
+		search: '',
 	}
 
-	async componentDidMount() {
+	async fetchData(url) {                    //componentDidMount
 		this.setState({isDataLoading:true})
-		const response = await fetch('http://www.filltext.com/?rows=32&id=%7Bnumber%7C1000%7D&firstName=%7BfirstName%7D&lastName=%7BlastName%7D&email=%7Bemail%7D&phone=%7Bphone%7C(xxx)xxx-xx-xx%7D&address=%7BaddressObject%7D&description=%7Blorem%7C32%7D');
+		const response = await fetch(url);
 		const data = await response.json();
 		this.setState({
 			isDataLoading: false,
@@ -41,32 +45,103 @@ class App extends Component {
   	)
 
   	selectDataSize = url =>{
-  		console.log(url);
+  		this.setState({
+      		isDataSizeSelected: true,
+      		isDataLoading: true,
+    	})
+    	this.fetchData(url)
   	}
 
+  	pageChangeHandler = ({selected}) => (
+  		this.setState({currentPage:selected})
+  	) 
+
+  	searchHandler = (search) =>(
+  		this.setState({search,currentPage: 0})
+  	)
+
+  	getFilteredData(){
+    const {data, search} = this.state
+
+    if (!search) {
+      return data
+    }
+   	var result = data.filter(item => {
+    	return (
+       		item["firstName"].toLowerCase().includes(search.toLowerCase()) ||
+       		item["lastName"].toLowerCase().includes(search.toLowerCase()) ||
+       		item["email"].toLowerCase().includes(search.toLowerCase())
+    	);
+   	});
+   	if(!result.length){
+    	result = this.state.data
+   	}
+    return result
+  	}
 
 	render() {
+
+		const pageSize = 50;
+		const filteredData = this.getFilteredData()
+		const displayData = _.chunk(filteredData, pageSize)[this.state.currentPage];
+		const pageCount = Math.ceil(filteredData.length / pageSize);
+
+		if(!this.state.isDataSizeSelected){
+			return(
+				<div>
+					<DataSize onSelect={this.selectDataSize}/>
+				</div>
+			)
+		}
+
 	  return (
+
 	    <div className="container">
 	    	{
 	    		this.state.isDataLoading
 	    			? <Loader/>
-	    			: <Table 
-	    				data={this.state.data} 
+	    			: 	<React.Fragment>
+	    				<SearchForm onSearch={this.searchHandler}/>
+	    				<Table 
+	    				data={displayData} 
 	    				doSort={this.doSort} 
 	    				sort={this.state.sort}
         				sortField={this.state.sortField}
         				onRowSelect={this.onRowSelect}
         				/>
+        				</React.Fragment>
 	    	}
-	    	{
-	    		<DataSize onSelect={this.selectDataSize}/>
-	    	}
+
 	    	{
 	    		this.state.row
 	    			? <RowData user={this.state.row}/>
 	    			: null
 	    	}
+
+	    	{
+		        this.state.data.length > pageSize
+		        ? <ReactPaginate
+		        previousLabel={'<'}
+		        nextLabel={'>'}
+		        breakLabel={'...'}
+		        breakClassName={'break-me'}
+		        pageCount={pageCount}
+		        marginPagesDisplayed={2}
+		        pageRangeDisplayed={5}
+		        onPageChange={this.pageChangeHandler}
+		        containerClassName={'pagination'}
+		        activeClassName={'active'}
+		        pageClassName="page-item"
+		        pageLinkClassName="page-link"
+		        previousClassName="page-item"
+		        nextClassName="page-item"
+		        previousLinkClassName="page-link"
+		        nextLinkClassName="page-link"
+		        forcePage={this.state.currentPage}
+		      	/> 
+		      	: null
+      		}
+      		
 	    </div>
 	  );
 	}
