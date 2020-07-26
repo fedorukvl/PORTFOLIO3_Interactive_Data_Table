@@ -22,7 +22,7 @@ class App extends Component {
 	}
 
 	doSort=(sortField)=>{
-		const cloneData=this.this.state.data.concat();
+		const cloneData=this.state.data.concat();
 		const sortType = this.state.sort === 'asc' ? 'desc' : 'asc';
 		const orderedData = _.orderBy(cloneData,sortField,sortType);
 		this.setState({
@@ -30,6 +30,7 @@ class App extends Component {
 			sort: sortType,
 			sortField
 		})
+		console.log(sortType);
 	}
 
 	render() {
@@ -38,7 +39,12 @@ class App extends Component {
 	    	{
 	    		this.state.dataLoading
 	    			? <Loader/>
-	    			: <Table data={this.state.data} doSort={this.doSort}/>
+	    			: <Table 
+	    				data={this.state.data} 
+	    				doSort={this.doSort} 
+	    				sort={this.state.sort}
+        				sortField={this.state.sortField}
+        				/>
 	    	}
 	    </div>
 	  );
