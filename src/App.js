@@ -10,8 +10,9 @@ import AddForm from './AddForm/AddForm.js'
 import AddFormButton from './AddForm/AddFromButton/AddFormButton.js'
 
 class App extends Component {
-
-	state = {
+	constructor(){
+	super();
+	this.state = {
 		isDataSizeSelected: false,
 		isDataLoading: false,
 		isAddedDataClicked: false,
@@ -21,6 +22,12 @@ class App extends Component {
 		row: null,
 		currentPage: 0,
 		search: '',
+		id: '',
+		firstName: '',
+		lastName: '',
+		email: '',
+		phone: '',
+	}
 	}
 
 	async fetchData(url) {                    //componentDidMount
@@ -69,7 +76,7 @@ class App extends Component {
 	    if (!search) {
 	      return data
 	    }
-	   	var result = data.filter(item => {
+	   	let result = data.filter(item => {
 	    	return (
 	       		item["firstName"].toLowerCase().includes(search.toLowerCase()) ||
 	       		item["lastName"].toLowerCase().includes(search.toLowerCase()) ||
@@ -81,8 +88,37 @@ class App extends Component {
 	   	}
 	    return result
   	}
+
   	showAddedData=()=>{
   		this.setState({isAddedDataClicked:true})
+  	}
+
+  	valueHandleChange = (event)=>{
+  		let input = event.target;
+		let name = input.name;
+		this.setState({
+			[input.name] : input.value,
+		})
+  	}
+
+  	submitAddData = (event)=>{
+  		event.preventDefault();
+  		let data =[...this.state.data]
+		data.unshift({
+			id: this.state.id,
+			firstName: this.state.firstName,
+			lastName: this.state.lastName,
+			email: this.state.email,
+			phone: this.state.phone,
+		});
+		this.setState({
+			data,
+			id: '',
+			firstName: '',
+			lastName: '',
+			email: '',
+			phone: '',
+		});
   	}
 
 	render() {
@@ -109,7 +145,15 @@ class App extends Component {
 	    			: 	<React.Fragment>
 	    				<SearchForm onSearch={this.searchHandler}/>
 	    				{ this.state.isAddedDataClicked
-	    					? <AddForm/>
+	    					? <AddForm
+	    						addedId={this.state.id}
+	    						addedFirstName={this.state.firstName}
+	    						addedLastName={this.state.lastName}
+	    						addedEmail={this.state.email}
+	    						addedPhone={this.state.phone}
+	    						submitAddData={this.submitAddData}
+	    						valueHandleChange={this.valueHandleChange}
+	    					   />
 	    					: <AddFormButton onChoose={this.showAddedData}/>
 	    				}
 	    				<Table 

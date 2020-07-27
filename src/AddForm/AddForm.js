@@ -1,52 +1,62 @@
-import React, {useState} from 'react'
+import React from 'react'
 
 export default props => {
-
-	const [addedValue,setAddedValue] = useState('');
-
-	const valueHandleChange = e =>(
-		console.log(e.target.value)
-	)
 
 	return (
 
 		<div className='input-group mb-3 mt-3'>
+		<form onSubmit={()=>props.submitAddData}>
 			<input 
 				type = 'text'
-				name = 'idForm'
+				name = 'id'
+				value={props.addedId}
 				className = 'form-control'
 				placeholder = 'ID'
-				onChange = {valueHandleChange()}
+				onChange = {()=>props.valueHandleChange}
 			/>
 			<input 
+				
 				type = 'text'
-				name = 'firstNameForm'
+				name = 'firstName'
+				value={props.addedFirstName}
 				className = 'form-control'
 				placeholder = 'First Name'
+				onChange = {()=>props.valueHandleChange}
 			/>
-			<input 
+			<input
+				 
 				type = 'text'
-				name = 'secondNameForm'
+				name = 'lastName'
+				value={props.addedLastName}
 				className = 'form-control'
-				placeholder = 'Second Name'
+				placeholder = 'Last Name'
+				onChange = {()=>props.valueHandleChange}
 			/>
-			<input 
-				type = 'text'
+			<input
+				 
+				type = 'email'
 				name = 'email'
+				value={props.addedEmail}
 				className = 'form-control'
 				placeholder = 'Email'
+				onChange = {()=>props.valueHandleChange}
 			/>
-			<input 
-				type = 'text'
+			<input
+
+				type = 'phone'
 				name = 'phone'
+				value={props.addedPhone}
 				className = 'form-control'
 				placeholder = 'Phone'
+				onChange = {()=>props.valueHandleChange}
 			/>
 			<div className="input-group-prepend">
                  <button 
                     className="btn btn-outline-secondary"
+                    type='submit'
                     >Add data to table</button>
             </div>
+            </form>
 		</div>
 	) 
 }
