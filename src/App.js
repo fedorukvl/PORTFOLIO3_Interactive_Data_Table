@@ -6,12 +6,15 @@ import RowData from './RowData/RowData.js'
 import DataSize from './DataSize/DataSize.js'
 import SearchForm from './SearchForm/SearchForm.js'
 import ReactPaginate from 'react-paginate';
+import AddForm from './AddForm/AddForm.js'
+import AddFormButton from './AddForm/AddFromButton/AddFormButton.js'
 
 class App extends Component {
 
 	state = {
 		isDataSizeSelected: false,
 		isDataLoading: false,
+		isAddedDataClicked: false,
 		data: [],
 		sort: 'asc',
 		sortField: 'id',
@@ -61,22 +64,25 @@ class App extends Component {
   	)
 
   	getFilteredData(){
-    const {data, search} = this.state
+	    const {data, search} = this.state
 
-    if (!search) {
-      return data
-    }
-   	var result = data.filter(item => {
-    	return (
-       		item["firstName"].toLowerCase().includes(search.toLowerCase()) ||
-       		item["lastName"].toLowerCase().includes(search.toLowerCase()) ||
-       		item["email"].toLowerCase().includes(search.toLowerCase())
-    	);
-   	});
-   	if(!result.length){
-    	result = this.state.data
-   	}
-    return result
+	    if (!search) {
+	      return data
+	    }
+	   	var result = data.filter(item => {
+	    	return (
+	       		item["firstName"].toLowerCase().includes(search.toLowerCase()) ||
+	       		item["lastName"].toLowerCase().includes(search.toLowerCase()) ||
+	       		item["email"].toLowerCase().includes(search.toLowerCase())
+	    	);
+	   	});
+	   	if(!result.length){
+	    	result = this.state.data
+	   	}
+	    return result
+  	}
+  	showAddedData=()=>{
+  		this.setState({isAddedDataClicked:true})
   	}
 
 	render() {
@@ -102,12 +108,16 @@ class App extends Component {
 	    			? <Loader/>
 	    			: 	<React.Fragment>
 	    				<SearchForm onSearch={this.searchHandler}/>
+	    				{ this.state.isAddedDataClicked
+	    					? <AddForm/>
+	    					: <AddFormButton onChoose={this.showAddedData}/>
+	    				}
 	    				<Table 
-	    				data={displayData} 
-	    				doSort={this.doSort} 
-	    				sort={this.state.sort}
-        				sortField={this.state.sortField}
-        				onRowSelect={this.onRowSelect}
+		    				data={displayData} 
+		    				doSort={this.doSort} 
+		    				sort={this.state.sort}
+	        				sortField={this.state.sortField}
+	        				onRowSelect={this.onRowSelect}
         				/>
         				</React.Fragment>
 	    	}
@@ -121,27 +131,27 @@ class App extends Component {
 	    	{
 		        this.state.data.length > pageSize
 		        ? <ReactPaginate
-		        previousLabel={'<'}
-		        nextLabel={'>'}
-		        breakLabel={'...'}
-		        breakClassName={'break-me'}
-		        pageCount={pageCount}
-		        marginPagesDisplayed={2}
-		        pageRangeDisplayed={5}
-		        onPageChange={this.pageChangeHandler}
-		        containerClassName={'pagination'}
-		        activeClassName={'active'}
-		        pageClassName="page-item"
-		        pageLinkClassName="page-link"
-		        previousClassName="page-item"
-		        nextClassName="page-item"
-		        previousLinkClassName="page-link"
-		        nextLinkClassName="page-link"
-		        forcePage={this.state.currentPage}
+			        previousLabel={'<'}
+			        nextLabel={'>'}
+			        breakLabel={'...'}
+			        breakClassName={'break-me'}
+			        pageCount={pageCount}
+			        marginPagesDisplayed={2}
+			        pageRangeDisplayed={5}
+			        onPageChange={this.pageChangeHandler}
+			        containerClassName={'pagination'}
+			        activeClassName={'active'}
+			        pageClassName="page-item"
+			        pageLinkClassName="page-link"
+			        previousClassName="page-item"
+			        nextClassName="page-item"
+			        previousLinkClassName="page-link"
+			        nextLinkClassName="page-link"
+			        forcePage={this.state.currentPage}
 		      	/> 
 		      	: null
       		}
-      		
+
 	    </div>
 	  );
 	}
