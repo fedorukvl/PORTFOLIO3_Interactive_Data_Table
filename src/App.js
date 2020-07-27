@@ -102,6 +102,7 @@ class App extends Component {
   	}
 
   	submitAddData = (event)=>{
+  		console.log('ters')
   		event.preventDefault();
   		let data =[...this.state.data]
 		data.unshift({
@@ -118,6 +119,7 @@ class App extends Component {
 			lastName: '',
 			email: '',
 			phone: '',
+			isAddedDataClicked: false,
 		});
   	}
 

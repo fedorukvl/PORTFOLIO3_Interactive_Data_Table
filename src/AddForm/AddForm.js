@@ -1,18 +1,21 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 
 export default props => {
+	const { valueHandleChange, submitAddData } = props
 
+	const handleSubmitAddData = useCallback((e) => submitAddData(e), [submitAddData]) 
+	const handleOnChange = useCallback((e) => valueHandleChange(e), [valueHandleChange])
 	return (
 
 		<div className='input-group mb-3 mt-3'>
-		<form onSubmit={()=>props.submitAddData}>
+		<form onSubmit={handleSubmitAddData}>
 			<input 
 				type = 'text'
 				name = 'id'
 				value={props.addedId}
 				className = 'form-control'
 				placeholder = 'ID'
-				onChange = {()=>props.valueHandleChange}
+				onChange = {handleOnChange}
 			/>
 			<input 
 				
@@ -21,7 +24,7 @@ export default props => {
 				value={props.addedFirstName}
 				className = 'form-control'
 				placeholder = 'First Name'
-				onChange = {()=>props.valueHandleChange}
+				onChange = {handleOnChange}
 			/>
 			<input
 				 
@@ -30,7 +33,7 @@ export default props => {
 				value={props.addedLastName}
 				className = 'form-control'
 				placeholder = 'Last Name'
-				onChange = {()=>props.valueHandleChange}
+				onChange = {handleOnChange}
 			/>
 			<input
 				 
@@ -39,7 +42,7 @@ export default props => {
 				value={props.addedEmail}
 				className = 'form-control'
 				placeholder = 'Email'
-				onChange = {()=>props.valueHandleChange}
+				onChange = {handleOnChange}
 			/>
 			<input
 
@@ -48,7 +51,7 @@ export default props => {
 				value={props.addedPhone}
 				className = 'form-control'
 				placeholder = 'Phone'
-				onChange = {()=>props.valueHandleChange}
+				onChange = {handleOnChange}
 			/>
 			<div className="input-group-prepend">
                  <button 
