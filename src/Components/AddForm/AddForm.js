@@ -9,7 +9,8 @@ export default props => {
 
 		<div className='input-group mb-3 mt-3'>
 		<form onSubmit={handleSubmitAddData}>
-			<input 
+			<input
+				required 
 				type = 'text'
 				name = 'id'
 				value={props.addedId}
@@ -18,7 +19,7 @@ export default props => {
 				onChange = {handleOnChange}
 			/>
 			<input 
-				
+				required
 				type = 'text'
 				name = 'firstName'
 				value={props.addedFirstName}
@@ -27,7 +28,7 @@ export default props => {
 				onChange = {handleOnChange}
 			/>
 			<input
-				 
+				required 
 				type = 'text'
 				name = 'lastName'
 				value={props.addedLastName}
@@ -36,7 +37,7 @@ export default props => {
 				onChange = {handleOnChange}
 			/>
 			<input
-				 
+				required 
 				type = 'email'
 				name = 'email'
 				value={props.addedEmail}
@@ -45,7 +46,7 @@ export default props => {
 				onChange = {handleOnChange}
 			/>
 			<input
-
+				required
 				type = 'phone'
 				name = 'phone'
 				value={props.addedPhone}

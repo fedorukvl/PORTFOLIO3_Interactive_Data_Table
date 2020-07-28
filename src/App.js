@@ -1,13 +1,15 @@
 import React,{ Component } from 'react';
 import _ from 'lodash';
-import Loader from './Loader/Loader.js'
-import Table from './Table/Table.js'
-import RowData from './RowData/RowData.js'
-import DataSize from './DataSize/DataSize.js'
-import SearchForm from './SearchForm/SearchForm.js'
 import ReactPaginate from 'react-paginate';
-import AddForm from './AddForm/AddForm.js'
-import AddFormButton from './AddForm/AddFromButton/AddFormButton.js'
+import {
+	AddForm,
+	AddFormButton,
+	DataSize,
+	Loader,
+	RowData,
+	SearchForm,
+	Table
+} from './Components'
 
 class App extends Component {
 	constructor(){
@@ -30,14 +32,18 @@ class App extends Component {
 	}
 	}
 
-	async fetchData(url) {                    //componentDidMount
+	async fetchData(url) {                           //componentDidMount
 		this.setState({isDataLoading:true})
-		const response = await fetch(url);
-		const data = await response.json();
-		this.setState({
-			isDataLoading: false,
-			data: _.orderBy(data, this.state.sortField, this.state.sort)
-		})
+		try{
+			const response = await fetch(url);
+			const data = await response.json();
+			this.setState({
+				isDataLoading: false,
+				data: _.orderBy(data, this.state.sortField, this.state.sort)
+			})
+		}catch(err){
+			alert('ERROR '+ err.message);
+		}
 	}
 
 	doSort = (sortField) => {
